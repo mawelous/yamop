@@ -236,7 +236,7 @@ Default fetching mode converts arrays to objects but you can also get array or j
         FETCH_OBJECT
         FETCH_ARRAY 
         FETCH_JSON  
-    /*
+    */
     Comment::getMapper( \Mawelous\Yamop\Mapper::FETCH_JSON )
         ->find( array( 'contest_id' => new MongoId( $contestId ) ) )
         ->get();
