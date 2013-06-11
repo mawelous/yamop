@@ -1,7 +1,7 @@
 # Yamop
 ### yet another mongo ODM for PHP
 
-- [What's that?](#wahtsthat)
+- [What's that?](#whatsthat)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
