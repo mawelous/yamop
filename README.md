@@ -78,7 +78,7 @@ That's it!
 
 Each object has an `_id`, which is a `MongoId`, and an `id` key which is its string representation.
 
-Every key in a `MongoDB` document is returned as an object - here a sample document inside `MongoDB`
+Every document in `MongoDB` is returned as an object, every key is a property - here a sample document inside `MongoDB`
 
 ```json
      {
