@@ -1,5 +1,5 @@
 # Yamop
-### yet another mongo ODM for PHP
+### Yet another mongoDB ODM for PHP
 
 - [What's that?](#whatsthat)
 - [Requirements](#requirements)
@@ -324,4 +324,4 @@ Then you can start using `add` funciton. With `add` you... add code to revert ch
             );
     });
 ```
-That's all folks! Enjoy!
+That's all folks!
