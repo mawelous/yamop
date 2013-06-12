@@ -43,8 +43,12 @@ List of features:
 You can simply download it [here](https://github.com/mawelous/yamop) or use [Composer](http://getcomposer.org/). 
 That's what you need to add to `composer.json`
 
-```yml
-    "mawelous/yamop": "dev-master"
+```json
+{
+    "require": {
+        "mawelous/yamop": "dev-master"
+    }
+}
 ```
 
 When you have it just those lines are needed in your code. You can pass any `MongoDB` instanse to `setDatabase` function.
