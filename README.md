@@ -141,7 +141,15 @@ Tu update you can use `save` method
 Those methods return same results as native `remove` and `save`. If you want to use multiple update use native function like [this](#multiple-update).
 
 ### Mapper
-You can exted `Mapper` if you want to add more methods. For example I created UserMapper with method that posts message on user's facebook wall. If you want to register different mapper for model just type in it:
+You can exted `Mapper` if you want to add more methods. For example I created UserMapper with method that posts message on user's facebook wall. Just let it know what model class to use.
+```php
+class UserMapper extends Mawelous\Yamop\Mapper
+{   
+    protected $_modelClassName = 'User';    
+}    
+```
+
+If you want to register different mapper for model just type in it:
 ```php
     protected static $_mapperClassName = 'UserMapper';    
 ```
