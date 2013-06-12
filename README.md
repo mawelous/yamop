@@ -98,7 +98,7 @@ It will be converted to something like
       public 'id' => string '51b6ea4fb7846c9410000001' (length=24)
   
 ```
-
+<a name="getting"></a>
 ### Getting data
 Want to get document by id? There is a simple way.
 
