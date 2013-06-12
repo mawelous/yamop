@@ -1,5 +1,5 @@
 # Yamop
-### Yet another mongoDB ODM for PHP
+### Yet another MongoDB ODM for PHP
 
 - [What's that?](#whatsthat)
 - [Requirements](#requirements)
@@ -298,7 +298,7 @@ Whether you have timestamp or not from time to time you would like to print date
 <a name="transactions"></a>
 ### Transactions
 
-That is just experiment. It's addition to Yamop which works independently. It doesn't support [two phase commit](#http://docs.mongodb.org/manual/tutorial/perform-two-phase-commits/) but at least if something wrong happens in your php it will convert changes.
+That is just experiment. It's addition to Yamop which works independently. It doesn't support [two phase commit](#http://docs.mongodb.org/manual/tutorial/perform-two-phase-commits/) but at least if something wrong happens in your php it will revert changes.
 That what `Mawelous\Yamop\Transaction` is for. First you have to handle errors and run `rollback` mathod within it. I made it like this
 ```php
     set_error_handler( function($code, $error, $file, $line) {
