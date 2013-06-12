@@ -14,7 +14,8 @@
     - [timestamps](#timestamps)
     - [dates and time](#datetime)
     - [transactions](#transactions)
-
+- [Issues](#Issues)
+- [License](#license)
 
 <a name="whatsthat"></a>
 ## What's that? 
@@ -383,6 +384,12 @@ Here an example:
             );
     });
 ```
+<a name="issues"></a>
+## Issues
 
-That's all folks!
+Any issues or questions please [report here](https://github.com/Mawelous/yamop/issues)
 
+<a name="license"></a>
+## License
+
+Yamop is free software distributed under the terms of the [MIT license](http://opensource.org/licenses/MIT)
