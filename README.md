@@ -60,9 +60,15 @@ After Composer is done you only need to add the following lines to your code
     $connection = new \MongoClient( 'your_host' );
     \Mawelous\Yamop\Mapper::setDatabase( $connection->db_name );
 ```
+<<<<<<< HEAD
 
 You can pass any `MongoDB` instance to the `setDatabase` function.
 
+=======
+
+You can pass any `MongoDB` instance to the `setDatabase` function.
+
+>>>>>>> bacb121efabad4288b23cb4773afb3d762ddbbf8
 Now extend `Mawelous\Yamop\Model` from within any of your models:
 
 ```php
@@ -117,16 +123,33 @@ Want to get a document by its id? There is a simple way.
     $mongoId = new MongoId( '51a61930b7846c400f000002' );
     $user = User::findById( $mongoId )
 ```
+<<<<<<< HEAD
 #### Introducing Mapper - find methods
 There is a `Mapper` class in Yamop which is responsible for retrieving data. I separated it from `Model` so it can stay as data container. If you want to create more complicated queries you want to use the mapper. You can get by using the `getMapper` method.
+=======
+#### Introducing Mapper
+There is a `Mapper` class in Yamop which is responsible for retrieving data. I separated it from `Model` so it can stay as data container. If you want to create more complicated queries you want to use the mapper. You can get it by using the `getMapper` method or creating new instance of it passing model class as string.
+>>>>>>> bacb121efabad4288b23cb4773afb3d762ddbbf8
 
 ```php
-    $user = User::getMapper()->findOne( array( 'email' => 'john@something.com' ) );
+    //first possibility
+    $mapper = User::getMapper();
+    //second possibility
+    $mapper = new Mawelous\Yamop\Mapper( 'User' );
 ```
 
+<<<<<<< HEAD
 `findOne` works exactly like native [`findOne`](#http://php.net/manual/en/mongocollection.findone.php) but it returns an object. As second parameter you can pass an array of fields. This means the parameters and queries stay the same, which is pretty great!
 
 `find` also works like native [`find`](#http://www.php.net/manual/en/mongocollection.find.php) but it returns a `Mapper`. You can then perform other operations on it like `sort`, `limit`, `skip`, or `get` (return arrays of objects) which all work like native as well.
+=======
+#### Find methods
+
+`findOne` works exactly like native [`findOne`](#http://php.net/manual/en/mongocollection.findone.php) but it returns an object. As second parameter you can pass an array of fields. This means the parameters and queries stay the same, which is pretty great!
+
+`find` also works like native [`find`](#http://www.php.net/manual/en/mongocollection.find.php) but it returns a `Mapper`. You can then perform other operations on it like `sort`, `limit`, `skip` which all work like native as well.
+To get result as array of objects use `get` method.
+>>>>>>> bacb121efabad4288b23cb4773afb3d762ddbbf8
 
 ```php
     $messages = Message::getMapper()
@@ -152,10 +175,17 @@ To update you can use the `save` method
     $user->email = 'new@email.com';
     $user->save();
 ```
+<<<<<<< HEAD
 
 Those methods return the same results as the native `remove` and `save` methods. If you want to update multiple documents use the native function like [here](#multiple-update).
 
 ### Mapper
+=======
+
+Those methods return the same results as the native `remove` and `save` methods. If you want to update multiple documents use the native function like [here](#multiple-update).
+
+### Extending Mapper
+>>>>>>> bacb121efabad4288b23cb4773afb3d762ddbbf8
 You can extend `Mapper` if you want to add more methods. For example I created UserMapper with has a method that posts a message on an user's Facebook wall. Just let it know which model class to use.
 
 ```php
@@ -168,27 +198,43 @@ class UserMapper extends Mawelous\Yamop\Mapper
 If you want to register a different `Mapper` for a model just declare it in the model
 
 ```php
-    protected static $_mapperClassName = 'UserMapper';    
+class User extends Model
+{
+    ...
+    protected static $_mapperClassName = 'UserMapper';
+    
+    public function findActiveUsers( $limit = 10, $sort = 'birthdate' )
+    {
+        //method code
+    }
+    ...
 ```
 
 Now you just execute the `Mapper`
 
 ```php
-    User::getMapper()
+    $mapper = User::getMapper();
 ```
 
 This will return an instance of UserMapper. You can also just create a new mapper
 
 ```php
     $userMapper = new UserMapper; 
+<<<<<<< HEAD
     //or using default mapper
     $userMapper = new \Mawelous\Yamop\Mapper( 'User' );
+=======
+>>>>>>> bacb121efabad4288b23cb4773afb3d762ddbbf8
 ```
 
 <a name="multiple-update"></a>
 ### Count, Indexes, and multi update
 
+<<<<<<< HEAD
 All methods called on `Mapper` that are not present are passed to the original `MongoCollection`. So you can use `update`, `count`, and `ensureIndex` directly with the native methods.
+=======
+All methods called on `Mapper` that are not present are passed to the original [`MongoCollection`](#http://php.net/manual/en/class.mongocollection.php). So you can use `update`, `count`, and `ensureIndex` directly with the native methods.
+>>>>>>> bacb121efabad4288b23cb4773afb3d762ddbbf8
 
 ```php
     //count
@@ -247,6 +293,8 @@ The `joinMany` method in every `Model` has also three parameters. First is the n
 
 ```php
     $user = User::findById( new MongoId( $stringId ) )->joinMany( 'contests', 'Contest', 'contests')
+    // and you have it there
+    $contests = $user->contests;
 ```
 
 If you want to join items to a list of items use `join` in a `Mapper`. Three parameters as in `joinOne`.
@@ -305,7 +353,11 @@ Yamop supports pagination with a little help from you. It has a `getPaginator` m
 
 Your framework probably has its own paginator. Before you use the `getPaginator` method you have to implement the `_createPaginator` method in a mapper that extends `Mawelous\Yamop\Mapper`.
 
+<<<<<<< HEAD
 [Laravel](http://laravel.com) would be extended like this:
+=======
+[Laravel3](http://laravel.com) would be extended like this:
+>>>>>>> bacb121efabad4288b23cb4773afb3d762ddbbf8
 
 ```php
 <?php
@@ -384,6 +436,11 @@ Here an example:
             );
     });
 ```
+<<<<<<< HEAD
+=======
+Now when error happens `rollback` will call all added methods.
+
+>>>>>>> bacb121efabad4288b23cb4773afb3d762ddbbf8
 <a name="issues"></a>
 ## Issues
 
