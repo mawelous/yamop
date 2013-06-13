@@ -6,59 +6,64 @@
 - [Installation](#installation)
 - [Usage](#usage)
     - [getting](#getting)
-    - [deleting, updateing](#deleting)
-    - [embeded objects](#embeded)
+    - [deleting, updating](#deleting)
+    - [embedded objects](#embedded)
     - [relations](#related)
     - [output format](#output)
     - [pagination](#pagination)
     - [timestamps](#timestamps)
     - [dates and time](#datetime)
     - [transactions](#transactions)
-
+- [Issues](#Issues)
+- [License](#license)
 
 <a name="whatsthat"></a>
 ## What's that? 
-This is another, open source, simple (just 3 files) ODM for [MongoDB](http://www.mongodb.org/).
-It works like standard php driver but returns objects instead of arrays (as ODM). Querying stays the same.
+This is yet another, open source, and very simple ODM for [MongoDB](http://www.mongodb.org/).
+It works like the standard MongoDB PHP extension interface but returns objects instead of arrays (as ODM). Queries stays the same.
 One of the coolest things are joins which allow you to query for related objects.
+
 List of features:
 
-- [String ids](#stringId) (easy to use for links etc.)
-- [Embeded objects](#embeded)
+- [String IDs](#stringid) (easier linking in views)
+- [Embedded objects](#embedded)
 - [Related objects](#related) (performing "join like" operations)
-- [Json format](#output)
+- [JSON format](#output)
 - [Paginator](#pagination)
-- [Timestamps](#timestamps) (created_at and updated_at) fields served on demand.
-- [Printing dates and time](#ditetime)
+- [Timestamps](#timestamps) (created_at and updated_at fields added on demand)
+- [Printing date and time](#datetime)
 - [Transactions](#transactions) (PHP error support only)
 
 <a name="requirements"></a>
 ## Requirements
 + PHP 5.3+
-+ MongoDB Driver
++ PHP MongoDB Extension
 
 <a name="installation"></a>
-## Instalation 
+## Installation 
 
-You can simply download it [here](https://github.com/mawelous/yamop) or use [Composer](http://getcomposer.org/). 
-That's what you need to add to `composer.json`
+You can simply download it [here](https://github.com/mawelous/yamop) or use [Composer](http://getcomposer.org/).
 
-```json
-{
-    "require": {
-        "mawelous/yamop": "dev-master"
-    }
-}
+In the `require` key of `composer.json` file add the following
+
+```yml
+    "Mawelous/yamop": "dev-master"
 ```
 
-When you have it just those lines are needed in your code. You can pass any `MongoDB` instanse to `setDatabase` function.
+Run the Composer update comand
+
+    $ composer update
+
+After Composer is done you only need to add the following lines to your code
 
 ```php
     $connection = new \MongoClient( 'your_host' );
     \Mawelous\Yamop\Mapper::setDatabase( $connection->db_name );
-```    
+```
 
-Now extend `Mawelous\Yamop\Model` with any of your models:
+You can pass any `MongoDB` instance to the `setDatabase` function.
+
+Now extend `Mawelous\Yamop\Model` from within any of your models:
 
 ```php
     class User extends \Mawelous\Yamop\Model
@@ -66,15 +71,16 @@ Now extend `Mawelous\Yamop\Model` with any of your models:
         protected static $_collectionName = 'users';    
     }
 ```
-Congratulations! That's it. You can start working with data.
+
+That's it!
 
 <a name="usage"></a>
 ##Usage
 
-Each object has `_id` which is `MongoId` and `id` which is its string representation. 
+Each object has an `_id`, which is a `MongoId`, and an `id` key which is its string representation.
 
-Every field in database is writen to object as property.
-This is sample document.
+Every document in `MongoDB` is returned as an object, every key is a property - here a sample document inside `MongoDB`
+
 ```json
      {
        "_id": ObjectId("51b6ea4fb7846c9410000001"),
@@ -83,7 +89,8 @@ This is sample document.
        "email": "john@something.com"
     }    
 ```
-It will be converted to something like
+The document above would be represented in PHP as follows:
+
 ```php
     object(User)[44]
       public '_id' => 
@@ -96,52 +103,67 @@ It will be converted to something like
           public 'usec' => int 0
       public 'email' => string 'john@something.com' (length=18)
       public 'id' => string '51b6ea4fb7846c9410000001' (length=24)
-  
 ```
+
 <a name="getting"></a>
 ### Getting data
-Want to get document by id? There is a simple way.
+Want to get a document by its id? There is a simple way.
 
-<a name="srtingId"></a>
+<a name="stringid"></a>
 ```php
-    $stringId = '51a61930b7846c400f000002';
-    $user = User::findById( $stringId )
-    
+    $stringId = ;
+    $user = User::findById( '51a61930b7846c400f000002' )
     //or
     $mongoId = new MongoId( '51a61930b7846c400f000002' );
     $user = User::findById( $mongoId )
-    
 ```
-#### Introducing Mapper - find functions
-There is `Mapper` class in Yamop which is responsible for getting data. I separeted it from `Model` so it can stay as data container. If you want to find object with more complicated query you need mapper. You can get it easily using `getMapper` function.
-```php
-    $user = User::getMapper()->findOne( array( 'email' => 'john@something.com' ) );
-```
-`findOne` works exactly like native [`findOne`](#http://php.net/manual/en/mongocollection.findone.php) but it returns wanted object. As as second param you can pass array of fields. So params and querying stays the same. Great!
+#### Introducing Mapper
+There is a `Mapper` class in Yamop which is responsible for retrieving data. I separated it from `Model` so it can stay as data container. If you want to create more complicated queries you want to use the mapper. You can get it by using the `getMapper` method or creating new instance of it passing model class as string.
 
-`find` also works like native [`find`](#http://www.php.net/manual/en/mongocollection.find.php) but it returns `Mapper`. You can perform other operations on it like `sort`, `limit`, `skip` which works like native or `get` which returns array of objects
+```php
+    //first possibility
+    $mapper = User::getMapper();
+    //second possibility
+    $mapper = new Mawelous\Yamop\Mapper( 'User' );
+```
+
+#### Find methods
+
+`findOne` works exactly like native [`findOne`](#http://php.net/manual/en/mongocollection.findone.php) but it returns an object. As second parameter you can pass an array of fields. This means the parameters and queries stay the same, which is pretty great!
+
+`find` also works like native [`find`](#http://www.php.net/manual/en/mongocollection.find.php) but it returns a `Mapper`. You can then perform other operations on it like `sort`, `limit`, `skip` which all work like native as well.
+To get result as array of objects use `get` method.
+
 ```php
     $messages = Message::getMapper()
         ->find( array( 'to_id' => new mongoId( $stringId ), 'to_status' => Message::STATUS_UNREAD ) )
         ->sort( array( 'created_at' => -1 ) )
-        ->limit(10)
+        ->limit( 10 )
         ->get(); 
 ```
+
 <a name="deleting"></a>
-### Delete, update
+### Delete and Update
+
 Deleting is simple
+
 ```php
     $user->remove();
 ```
-Tu update you can use `save` method
+
+To update you can use the `save` method
+
 ```php
+    ...
     $user->email = 'new@email.com';
     $user->save();
 ```
-Those methods return same results as native `remove` and `save`. If you want to use multiple update use native function like [this](#multiple-update).
 
-### Mapper
-You can exted `Mapper` if you want to add more methods. For example I created UserMapper with method that posts message on user's facebook wall. Just let it know what model class to use.
+Those methods return the same results as the native `remove` and `save` methods. If you want to update multiple documents use the native function like [here](#multiple-update).
+
+### Extending Mapper
+You can extend `Mapper` if you want to add more methods. For example I created UserMapper with has a method that posts a message on an user's Facebook wall. Just let it know which model class to use.
+
 ```php
 class UserMapper extends Mawelous\Yamop\Mapper
 {   
@@ -149,28 +171,41 @@ class UserMapper extends Mawelous\Yamop\Mapper
 }    
 ```
 
-If you want to register different mapper for model just type in it:
+If you want to register a different `Mapper` for a model just declare it in the model
+
 ```php
-    protected static $_mapperClassName = 'UserMapper';    
-```
-And now
-```php
-    User::getMapper()
-```
-will return UserMapper instance. Of course you can just create new mapper with constructor.
-```php
-    $userMapper = new UserMapper;
+class User extends Model
+{
+    ...
+    protected static $_mapperClassName = 'UserMapper';
     
-    //or using default mapper
-    $userMapper = new \Mawelous\Yamop\Mapper( 'User' );
+    public function findActiveUsers( $limit = 10, $sort = 'birthdate' )
+    {
+        //method code
+    }
+    ...
 ```
+
+Now you just execute the `Mapper`
+
+```php
+    $mapper = User::getMapper();
+```
+
+This will return an instance of UserMapper. You can also just create a new mapper
+
+```php
+    $userMapper = new UserMapper; 
+```
+
 <a name="multiple-update"></a>
-### count, multiple update
-All methods called on mapper that are not its own are passed to `MongoCollection` that it represents. So you can use `update`, `count`, `ensureIndex` normally.
+### Count, Indexes, and multi update
+
+All methods called on `Mapper` that are not present are passed to the original [`MongoCollection`](#http://php.net/manual/en/class.mongocollection.php). So you can use `update`, `count`, and `ensureIndex` directly with the native methods.
+
 ```php
     //count
     Message::getMapper()->count( array( 'to_id' => $userId, 'to_status' => Message::STATUS_UNREAD ) );
-
     //update
     Contest::getMapper()->update(
             array('status' => Contest::STATUS_READY_DRAFT,
@@ -179,50 +214,58 @@ All methods called on mapper that are not its own are passed to `MongoCollection
             array('multiple' => true)
         );
 ```
-<a name="embeded"></a>
-### Embeded objects
-Do you have objects within the main object? Yamop will convert it automatically. Just let him know.
+
+<a name="embedded"></a>
+### Embedded objects
+
+Do you have more objects within the current object? Yamop will convert it automatically. Just let it know.
+
 ```php
 class User extends Model
 {
     protected static $_collectionName = 'users';
     protected static $_mapperClassName = 'UserMapper';  
-
-    //One Address object embeded in address property
-    protected static $_embededObject = array (
+    // One Address object embedded in address property
+    protected static $_embeddedObject = array (
             'address' => 'Address',
     );
-
-    //Many Notification objects embeded in array that is kept ass notifications
-    protected static $_embededObjectList = array (
+    // Many Notification objects embedded in array that is kept ass notifications
+    protected static $_embeddedObjectList = array (
         'notifications' => 'Notification',
-    );  
-
-...    
+    );
 ```
 
 <a name="related"></a>
 ### Related objects
-If there are relations between objects (sure there are) and you would like to "join" them it's simpler that you would expect.
-You don't have to register it anywhere. In my opinion it's better to do this explicit and avoid queries in background. Here's the magic.
+
+If there are relations between objects (there are sometimes) and you would like to "join" them, it's simpler than you would expect, even with `MongoDB`.
+
+You don't have to register it anywhere. In my opinion it's better to do this explicit and avoid queries in background. 
+
+Here's the magic:
 
 #### One
 
-Use `joinOne` function on `Model` that takes three params. First is name of property which keeps `MongoId` of related obeject, second is related object class, and third property to which it should be writen.
+The `joinOne` method in every `Model` takes three parameters. First is the name of the property which keeps the `MongoId` of the related object, second is the related objects class, and third is the property name it will be joined at.
+
 ```php
     $user = User::findById( new MongoId( $stringId ) )->joinOne( 'contest_id', 'Contest', 'contest')
-    
-    //and there it is
+    // and there it is
     $contest = $user->contest;
 ```
+
 #### Many
 
-Use `joinMany` function on `Model` with similar three params. First is name of property which keeps array of `MongoId`, second is related object class, and third property to which it should be writen.
+The `joinMany` method in every `Model` has also three parameters. First is the name of the property which keeps an array of `MongoId`'s, second is the related objects class, and third is the property name it will be joined at.
+
 ```php
     $user = User::findById( new MongoId( $stringId ) )->joinMany( 'contests', 'Contest', 'contests')
+    // and you have it there
+    $contests = $user->contests;
 ```
 
-If you want to join items to list of items use `join` on `Mapper`. Three params as in `joinOne`.
+If you want to join items to a list of items use `join` in a `Mapper`. Three parameters as in `joinOne`.
+
 ```php
     $commentsList = Comment::getMapper()
         ->find( array( 'contest_id' => new MongoId( $contestId ) ) )
@@ -230,9 +273,12 @@ If you want to join items to list of items use `join` on `Mapper`. Three params 
         ->limit( 10 )
         ->get();
 ```
+
 <a name="output"></a>
 ### Output format
-Default fetching mode converts arrays to objects but you can also get array or json with `getArray` and `getJson`.
+
+Default fetching mode converts arrays to objects but you can also get array or JSON with `getArray` and `getJson`.
+
 ```php
     //first possibility
     Comment::getMapper()
@@ -259,16 +305,23 @@ Default fetching mode converts arrays to objects but you can also get array or j
         ->find( array( 'contest_id' => new MongoId( $contestId ) ) )
         ->get();        
 ```
+
 <a name="pagination"></a>
 ### Pagination
-Yamop can supprot pagination with a little of your help. It has `getPaginator` method which takse two params. First is page number, second number of items per page.
+
+Yamop supports pagination with a little help from you. It has a `getPaginator` method which takes two parameters. First is the current page number, second is the amount of items per page.
+
 ```php
     User::getMapper()
         ->find( 'status' => array ( '$ne' => User::STATUS_DELETED )) )
         ->sort( array( $field => $direction ) )
         ->getPaginator( $page, $perPage );
 ```
-Your framework probably has its paginator. Before you use `getPaginator` method you have to implement `_createPaginator` function in a mapper that extends `Mawelous\Yamop\Mapper`. I made it for Laravel like this
+
+Your framework probably has its own paginator. Before you use the `getPaginator` method you have to implement the `_createPaginator` method in a mapper that extends `Mawelous\Yamop\Mapper`.
+
+[Laravel3](http://laravel.com) would be extended like this:
+
 ```php
 <?php
 
@@ -280,9 +333,12 @@ class Mapper extends \Mawelous\Yamop\Mapper
     }
 }
 ```
+
 <a name="timestamps"></a>
 ### Timestamps
-It's common to have `created_at` and `updated_at` in our objects. It you want to get them work and set automatically for your `Model` just delare it.
+
+It's common to have a `created_at` and `updated_at` key in our objects. If you want to have them be set automatically for your `Model`, just declare it:
+
 ```php
 class User extends Model
 {
@@ -293,25 +349,29 @@ class User extends Model
 
 <a name="datetime"></a>
 ### Printing date and time
-Whether you have timestamp or not from time to time you would like to print dates and time. I advice to keep dates as `MongoDate`. Then you can echo it with `getTime` or `getDate` methods which takse two params. First is property name, second string that represents format passed to `data` function
+
+Whether you have a timestamp or not, you might still like to print the date or time. It's recommend to keep dates as `MongoDate` this way you can echo it with `getTime` or `getDate` which takes two parameters. First is the `MongoDate` property name, second is a string that represents format passed to the PHP `date` function:
+
 ```php
     //date as string
     $user->getDate( 'birthdate', 'Y/m/d' );
-    
     //time as string
     $user->getTime( 'created_at', 'Y/m/d H:i');
-    
     //time as string using default format set in $dateFormat
     $user->getTime( 'created_at' );    
 ```
 
-`Mawelous\Yamop\Model` has its default date format defined in public static `$dateFormat` property and time format in `$timeFormat`. You can override it if you want.
+`Mawelous\Yamop\Model` has its default date format defined in the public static `$dateFormat` property and a time format in `$timeFormat`. You can override it if you like.
 
 <a name="transactions"></a>
 ### Transactions
 
-That is just experiment. It's addition to Yamop which works independently. It doesn't support [two phase commit](#http://docs.mongodb.org/manual/tutorial/perform-two-phase-commits/) but at least if something wrong happens in your php it will revert changes.
-That what `Mawelous\Yamop\Transaction` is for. First you have to handle errors and run `rollback` mathod within it. I made it like this
+**EXPERIMENTAL!** - It's an addition to Yamop which works independently. It doesn't support a [two phase commit](#http://docs.mongodb.org/manual/tutorial/perform-two-phase-commits/) but at least it can revert changes.
+
+That's what `Mawelous\Yamop\Transaction` is for. First you have to handle errors and run the `rollback` method within it. 
+
+Similar to this:
+
 ```php
     set_error_handler( function($code, $error, $file, $line) {
         Transaction::rollback();
@@ -319,7 +379,10 @@ That what `Mawelous\Yamop\Transaction` is for. First you have to handle errors a
         Laravel\Error::native($code, $error, $file, $line);
     });
 ```
-Then you can start using `add` funciton. With `add` you... add code to revert changes you made with save or update. You can use clousure to do that. Here's an example.
+
+Then you can start using the `add` method. With `add` you add code to revert changes you made with save or update. You can use a closure to do that. 
+
+Here an example:
 
 ```php
     User::getMapper()->update(
@@ -336,5 +399,14 @@ Then you can start using `add` funciton. With `add` you... add code to revert ch
             );
     });
 ```
-That's all folks!
+Now when error happens `rollback` will call all added methods.
 
+<a name="issues"></a>
+## Issues
+
+Any issues or questions please [report here](https://github.com/Mawelous/yamop/issues)
+
+<a name="license"></a>
+## License
+
+Yamop is free software distributed under the terms of the [MIT license](http://opensource.org/licenses/MIT)
