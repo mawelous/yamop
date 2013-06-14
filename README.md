@@ -6,7 +6,7 @@
 - [Installation](#installation)
 - [Usage](#usage)
     - [getting](#getting)
-    - [deleting, updating](#deleting)
+    - [save, update, delete](#save)
     - [embedded objects](#embedded)
     - [relations](#related)
     - [output format](#output)
@@ -142,21 +142,27 @@ To get result as array of objects use `get` method.
         ->get(); 
 ```
 
-<a name="deleting"></a>
-### Delete and Update
+<a name="save"></a>
+### Save, Update and Delete
+`save` method is used to create and update objects. That's the code to create new object and write it to the database
+
+```php
+    // properties as array
+    $user = new User( array( 'name' => 'John', 'email' => 'email@email.com' ) );
+    
+    // or each property separately
+    $user = new User;
+    $user->name = 'John';
+    $user->emial = 'email@email.com';
+    
+    $user->save();
+```
+You can get `_id` of newly created object just after `save`.
 
 Deleting is simple
 
 ```php
     $user->remove();
-```
-
-To update you can use the `save` method
-
-```php
-    ...
-    $user->email = 'new@email.com';
-    $user->save();
 ```
 
 Those methods return the same results as the native `remove` and `save` methods. If you want to update multiple documents use the native function like [here](#multiple-update).
