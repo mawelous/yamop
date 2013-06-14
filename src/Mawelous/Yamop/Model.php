@@ -29,13 +29,13 @@ class Model
 	protected static $_mapperClassName = 'Mawelous\Yamop\Mapper';
 	
 	/**
-	 * Informations about embeded object list
+	 * Informations about embedded object list
 	 * that will be created while this object creation.
 	 * Array key is a name of field that keeps array of objects.
 	 * Array value specifies Model class to which objects should be mapped.
 	 * 
 	 * <code>
-	 * 	protected static $_embededObjectList = array (
+	 * 	protected static $_embeddedObjectList = array (
 	 *		'tags'          => 'HackerTag',
 	 *		'notifications' => 'Notification',
 	 *	);	
@@ -43,23 +43,23 @@ class Model
 	 * 
 	 * @var array
 	 */
-	protected static $_embededObjectList = array();
+	protected static $_embeddedObjectList = array();
 	
 	/**
-	 * Informations about embeded object 
+	 * Informations about embedded object 
 	 * that will be created while this object creation.
 	 * Array key is a name of field that keeps object.
 	 * Array value specifies Model class to which objects should be mapped.
 	 *
 	 * <code>
-	 *  protected static $_embededObject = array (
+	 *  protected static $_embeddedObject = array (
 	 *		'address' => 'Address',
 	 *  );	
 	 * </code>
 	 *
 	 * @var array
 	 */	
-	protected static $_embededObject = array();
+	protected static $_embeddedObject = array();
 	
 	/**
 	 * Format of date to return with getDate funciton
@@ -86,8 +86,8 @@ class Model
 	
 	/**
 	 * Fills object with variables.
-	 * Sets embeded objects if they are registered in
-	 * $_embededObjectLisr or $_embededObject.
+	 * Sets embedded objects if they are registered in
+	 * $_embeddedObjectLisr or $_embeddedObject.
 	 * 
 	 * @param array $array
 	 */
@@ -95,16 +95,16 @@ class Model
 	{
 		if ( !empty( $array ) ) {
 			foreach ( $array as $key => $value ) {
-				//checks if field contains embeded object list
-				if( in_array( $key, array_keys ( static::$_embededObjectList ) ) && is_array( $value ) ) {
+				//checks if field contains embedded object list
+				if( in_array( $key, array_keys ( static::$_embeddedObjectList ) ) && is_array( $value ) ) {
 					$this->{$key} = array();
 					foreach ( $value as $eKey => $eData ) {
 						if( is_array( $eData ) ){
-							$this->{$key}[ $eKey ] = new static::$_embededObjectList[ $key ] ( $eData );
+							$this->{$key}[ $eKey ] = new static::$_embeddedObjectList[ $key ] ( $eData );
 						}
 					}	
-				}elseif( in_array( $key, array_keys ( static::$_embededObject ) ) && is_array( $value ) ) {
-					$this->{$key} = new static::$_embededObject[ $key ] ( $value );
+				}elseif( in_array( $key, array_keys ( static::$_embeddedObject ) ) && is_array( $value ) ) {
+					$this->{$key} = new static::$_embeddedObject[ $key ] ( $value );
 				}else {			
 					$this->$key = $value;
 				}
@@ -162,11 +162,11 @@ class Model
 		
 		unset( $this->id );
 		
-		//deleteng ids in embeded objects
-		foreach ( static::$_embededObjectList as $fieldName => $class ){
+		//deleteng ids in embedded objects
+		foreach ( static::$_embeddedObjectList as $fieldName => $class ){
 			if( isset( $this->$fieldName ) && !empty ( $this->$fieldName ) ){
-				foreach( $this->$fieldName as $_embededObject ){
-					unset ( $_embededObject->id );
+				foreach( $this->$fieldName as $_embeddedObject ){
+					unset ( $_embeddedObject->id );
 				}
 			}
 		}
