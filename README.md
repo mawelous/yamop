@@ -50,7 +50,7 @@ In the `require` key of `composer.json` file add the following
     "mawelous/yamop": "dev-master"
 ```
 
-Run the Composer update comand
+Run the Composer update command
 
     $ composer update
 
@@ -136,7 +136,7 @@ To get result as array of objects use `get` method.
 
 ```php
     $messages = Message::getMapper()
-        ->find( array( 'to_id' => new mongoId( $stringId ), 'to_status' => Message::STATUS_UNREAD ) )
+        ->find( array( 'to_id' => new MongoId( $stringId ), 'to_status' => Message::STATUS_UNREAD ) )
         ->sort( array( 'created_at' => -1 ) )
         ->limit( 10 )
         ->get(); 
