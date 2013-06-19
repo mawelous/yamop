@@ -47,7 +47,7 @@ You can simply download it [here](https://github.com/mawelous/yamop) or use [Com
 In the `require` key of `composer.json` file add the following
 
 ```yml
-    "Mawelous/yamop": "dev-master"
+    "mawelous/yamop": "dev-master"
 ```
 
 Run the Composer update comand
