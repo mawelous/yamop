@@ -4,29 +4,40 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Yamop by mawelous</title>
-
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
   </head>
   <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/mawelous/yamop">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/mawelous/yamop/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/mawelous/yamop/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
     <div class="wrapper">
-      <header>
-        <h1>Yamop</h1>
-        <p>Yet another MongoDB ODM for PHP</p>
-        <p class="view"><a href="https://github.com/mawelous/yamop">View the Project on GitHub <small>mawelous/yamop</small></a></p>
-        <ul>
-          <li><a href="https://github.com/mawelous/yamop/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/mawelous/yamop/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/mawelous/yamop">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
+
       <section>
+        <div id="title">
+          <h1>Yamop</h1>
+          <p>Yet another MongoDB ODM for PHP</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/mawelous">mawelous</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
         <ul>
 <li><a href="#whatsthat">What's that?</a></li>
 <li><a href="#requirements">Requirements</a></li>
@@ -89,7 +100,7 @@ One of the coolest things are joins which allow you to query for related objects
 
 <p>In the <code>require</code> key of <code>composer.json</code> file add the following</p>
 
-<div class="highlight"><pre>    <span class="s">"Mawelous/yamop"</span><span class="p-Indicator">:</span> <span class="s">"dev-master"</span>
+<div class="highlight"><pre>    <span class="s">"mawelous/yamop"</span><span class="p-Indicator">:</span> <span class="s">"dev-master"</span>
 </pre></div>
 
 <p>Run the Composer update comand</p>
@@ -475,11 +486,8 @@ To get result as array of objects use <code>get</code> method.</p>
 
 <p>Yamop is free software distributed under the terms of the <a href="http://opensource.org/licenses/MIT">MIT license</a></p>
       </section>
+
     </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/mawelous">mawelous</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
