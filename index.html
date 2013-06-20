@@ -1,43 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Yamop by mawelous</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Yamop : Yet another MongoDB ODM for PHP" />
 
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Yamop</title>
   </head>
+
   <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/mawelous/yamop">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/mawelous/yamop/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/mawelous/yamop/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
 
-    <div class="wrapper">
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/mawelous/yamop">View on GitHub</a>
 
-      <section>
-        <div id="title">
-          <h1>Yamop</h1>
-          <p>Yet another MongoDB ODM for PHP</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/mawelous">mawelous</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
-        </div>
+          <h1 id="project_title">Yamop</h1>
+          <h2 id="project_tagline">Yet another MongoDB ODM for PHP</h2>
 
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/mawelous/yamop/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/mawelous/yamop/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
         <ul>
 <li><a href="#whatsthat">What's that?</a></li>
 <li><a href="#requirements">Requirements</a></li>
@@ -65,8 +58,8 @@
 <a name="whats-that" class="anchor" href="#whats-that"><span class="octicon octicon-link"></span></a>What's that?</h2>
 
 <p>This is yet another, open source, and very simple ODM for <a href="http://www.mongodb.org/">MongoDB</a>.
-It works like the standard MongoDB PHP extension interface but returns objects instead of arrays (as ODM). Queries stays the same.
-One of the coolest things are joins which allow you to query for related objects.</p>
+It works like the standard MongoDB PHP extension interface but returns objects instead of arrays (as ODM). Queries stay the same.
+One of its coolest features are joins which allow you to query for related objects.</p>
 
 <p>List of features:</p>
 
@@ -98,12 +91,12 @@ One of the coolest things are joins which allow you to query for related objects
 
 <p>You can simply download it <a href="https://github.com/mawelous/yamop">here</a> or use <a href="http://getcomposer.org/">Composer</a>.</p>
 
-<p>In the <code>require</code> key of <code>composer.json</code> file add the following</p>
+<p>In the <code>require</code> key inside the <code>composer.json</code> file add the following</p>
 
 <div class="highlight"><pre>    <span class="s">"mawelous/yamop"</span><span class="p-Indicator">:</span> <span class="s">"dev-master"</span>
 </pre></div>
 
-<p>Run the Composer update comand</p>
+<p>Save it and run the Composer update command</p>
 
 <pre><code>$ composer update
 </code></pre>
@@ -194,7 +187,7 @@ One of the coolest things are joins which allow you to query for related objects
 To get result as array of objects use <code>get</code> method.</p>
 
 <div class="highlight"><pre>    <span class="nv">$messages</span> <span class="o">=</span> <span class="nx">Message</span><span class="o">::</span><span class="na">getMapper</span><span class="p">()</span>
-        <span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span> <span class="k">array</span><span class="p">(</span> <span class="s1">'to_id'</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">mongoId</span><span class="p">(</span> <span class="nv">$stringId</span> <span class="p">),</span> <span class="s1">'to_status'</span> <span class="o">=&gt;</span> <span class="nx">Message</span><span class="o">::</span><span class="na">STATUS_UNREAD</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span> <span class="k">array</span><span class="p">(</span> <span class="s1">'to_id'</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">MongoId</span><span class="p">(</span> <span class="nv">$stringId</span> <span class="p">),</span> <span class="s1">'to_status'</span> <span class="o">=&gt;</span> <span class="nx">Message</span><span class="o">::</span><span class="na">STATUS_UNREAD</span> <span class="p">)</span> <span class="p">)</span>
         <span class="o">-&gt;</span><span class="na">sort</span><span class="p">(</span> <span class="k">array</span><span class="p">(</span> <span class="s1">'created_at'</span> <span class="o">=&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="p">)</span> <span class="p">)</span>
         <span class="o">-&gt;</span><span class="na">limit</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
         <span class="o">-&gt;</span><span class="na">get</span><span class="p">();</span> 
@@ -486,9 +479,17 @@ To get result as array of objects use <code>get</code> method.</p>
 
 <p>Yamop is free software distributed under the terms of the <a href="http://opensource.org/licenses/MIT">MIT license</a></p>
       </section>
-
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Yamop maintained by <a href="https://github.com/mawelous">mawelous</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
     
+
   </body>
 </html>
