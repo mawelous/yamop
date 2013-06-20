@@ -20,8 +20,8 @@
 <a name="whatsthat"></a>
 ## What's that? 
 This is yet another, open source, and very simple ODM for [MongoDB](http://www.mongodb.org/).
-It works like the standard MongoDB PHP extension interface but returns objects instead of arrays (as ODM). Queries stays the same.
-One of the coolest things are joins which allow you to query for related objects.
+It works like the standard MongoDB PHP extension interface but returns objects instead of arrays (as ODM). Queries stay the same.
+One of its coolest features are joins which allow you to query for related objects.
 
 List of features:
 
@@ -44,13 +44,13 @@ List of features:
 
 You can simply download it [here](https://github.com/mawelous/yamop) or use [Composer](http://getcomposer.org/).
 
-In the `require` key of `composer.json` file add the following
+In the `require` key inside the `composer.json` file add the following
 
 ```yml
     "mawelous/yamop": "dev-master"
 ```
 
-Run the Composer update command
+Save it and run the Composer update command
 
     $ composer update
 
