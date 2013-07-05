@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="./tests/bootstrap.php"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         stopOnFailure="false"
+         processIsolation="true"
+>
+    <testsuites>
+        <testsuite name="Yamop">
+            <directory>./tests/</directory>
+        </testsuite>  
+        <testsuite name="Model">
+            <file>./tests/Mawelous/Yamop/Tests/ModelTest.php</file>
+        </testsuite>        
+        <testsuite name="Mapper">
+            <file>./tests/Mawelous/Yamop/Tests/MapperTest.php</file>
+        </testsuite>               
+    </testsuites>
+</phpunit>

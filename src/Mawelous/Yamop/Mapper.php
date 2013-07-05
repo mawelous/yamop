@@ -289,6 +289,16 @@ class Mapper
 	}
 	
 	/**
+	 * Gets MongoCursor
+	 * 
+	 * @return \MongoCursor
+	 */
+	public function getCursor()
+	{
+		return $this->_cursor;
+	}
+	
+	/**
 	 * Sets fetch type
 	 * 
 	 * @param int $fetchType Use one of contsnts

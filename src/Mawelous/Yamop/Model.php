@@ -162,11 +162,17 @@ class Model
 		
 		unset( $this->id );
 		
-		//deleteng ids in embedded objects
+		//deleteng string ids in embedded objects
+		foreach ( static::$_embeddedObject as $fieldName => $embeddedObject ){
+			if( isset( $this->$fieldName ) && !empty ( $this->$fieldName ) ){
+				unset ( $embeddedObject->id );
+			}
+		}		
+		
 		foreach ( static::$_embeddedObjectList as $fieldName => $class ){
 			if( isset( $this->$fieldName ) && !empty ( $this->$fieldName ) ){
-				foreach( $this->$fieldName as $_embeddedObject ){
-					unset ( $_embeddedObject->id );
+				foreach( $this->$fieldName as $embeddedObject ){
+					unset ( $embeddedObject->id );
 				}
 			}
 		}
@@ -197,6 +203,32 @@ class Model
 	{
 		return static::getMapper()->findById( $id );
 	}
+	
+	/**
+	 * Gets object by query.
+	 * Refferer to Mapper's findOne
+	 *
+	 * @param array $query Query as for findOne in mongodb driver
+	 * @param array $fields
+	 * @return Model
+	 */
+	public static function findOne( $query, $fields = array() )
+	{
+		return static::getMapper()->findOne( $query, $fields );
+	}	
+	
+	/**
+	 * Refferer to Mapper's find.
+	 * Gets Mapper object with cursor set.
+	 *
+	 * @param array $query Query as for findOne in mongodb driver
+	 * @param array $fields
+	 * @return Model
+	 */
+	public static function find( $query, $fields = array() )
+	{
+		return static::getMapper()->find( $query, $fields );
+	}	
 	
 	/**
 	 * Checks if _id is set in object
@@ -294,7 +326,7 @@ class Model
 	{
 		if( isset($this->$variable) && !empty( $this->$variable ) ){
 			if( empty( $toVariable ) ){
-				$toField = $variable;
+				$toVariable = $variable;
 			}
 			$this->$toVariable = $class::getMapper()->findOne( array ('_id' => $this->$variable ), $fields );
 		}
