@@ -118,7 +118,7 @@ class Mapper
 	 * @param array $fields
 	 * @return array|string|Model
 	 */
-	public function findOne( $query, $fields = array() )
+	public function findOne( $query = array(), $fields = array() )
 	{
 		$modelClass = $this->_modelClassName;
 		$collectionName = $modelClass::getCollectionName();

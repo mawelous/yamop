@@ -212,7 +212,7 @@ class Model
 	 * @param array $fields
 	 * @return Model
 	 */
-	public static function findOne( $query, $fields = array() )
+	public static function findOne( $query = array(), $fields = array() )
 	{
 		return static::getMapper()->findOne( $query, $fields );
 	}	
@@ -225,7 +225,7 @@ class Model
 	 * @param array $fields
 	 * @return Model
 	 */
-	public static function find( $query, $fields = array() )
+	public static function find( $query = array(), $fields = array() )
 	{
 		return static::getMapper()->find( $query, $fields );
 	}	
