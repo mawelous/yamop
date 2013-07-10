@@ -237,7 +237,7 @@ This will return an instance of UserMapper. You can also just create a new mappe
 <a name="multiple-update"></a>
 ### Count, Indexes, multi update and others
 
-All methods called on `Mapper` that are not present are passed to the original `[MongoCollection](#http://php.net/manual/en/class.mongocollection.php)`. So you can use `update`, `count`, `batchInsert`, `ensureIndex` and even `drop` directly with the native methods.
+All methods called on `Mapper` that are not present are passed to the original [`MongoCollection`](#http://php.net/manual/en/class.mongocollection.php). So you can use `update`, `count`, `batchInsert`, `ensureIndex` and even `drop` directly with the native methods.
 
 ```php
     //count
