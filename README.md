@@ -173,6 +173,8 @@ To get result as array of objects use `get` method.
         ->get(); 
 ```
 
+`findAndModify` is equivalent to native [`findAndModify`](#http://www.php.net/manual/en/mongocollection.findandmodify.php) but serves objects.
+
 <a name="save"></a>
 ### Save, Update and Delete
 `save` method is used to create and update objects. That's the code to create new object and write it to the database
