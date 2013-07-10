@@ -104,6 +104,17 @@ The document above would be represented in PHP as follows:
       public 'email' => string 'john@something.com' (length=18)
       public 'id' => string '51b6ea4fb7846c9410000001' (length=24)
 ```
+There are two possibilities to pass properties to object
+
+```php
+    // properties as array
+    $user = new User( array( 'name' => 'John', 'email' => 'email@email.com' ) );
+    
+    // or each property separately
+    $user = new User;
+    $user->name = 'John';
+    $user->emial = 'email@email.com';
+```
 
 <a name="getting"></a>
 ### Getting data
@@ -117,6 +128,15 @@ Want to get a document by its id? There is a simple way.
     $mongoId = new MongoId( '51a61930b7846c400f000002' );
     $user = User::findById( $mongoId )
 ```
+
+Getting one document by query is simple too. Method `findOne` works exactly like native [`findOne`](#http://php.net/manual/en/mongocollection.findone.php) but it returns an object. As second parameter you can pass an array of fields. This means the parameters and queries stay the same, which is pretty great!
+
+```php
+    $user = User::findOne( array( 'email' => 'user@mail.com' ) );
+    //or
+    $user = User::findOne( array( 'email' => 'user@mail.com' ), array( 'email', 'username', 'birthdate' ) );
+```
+
 #### Introducing Mapper
 There is a `Mapper` class in Yamop which is responsible for retrieving data. I separated it from `Model` so it can stay as data container. If you want to create more complicated queries you want to use the mapper. You can get it by using the `getMapper` method or creating new instance of it passing model class as string.
 
@@ -128,13 +148,24 @@ There is a `Mapper` class in Yamop which is responsible for retrieving data. I s
 ```
 
 #### Find methods
+`findOne` introduced before for `Model` is `Mapper's` method. `Model` just refers to it. You could call it like this
 
-`findOne` works exactly like native [`findOne`](#http://php.net/manual/en/mongocollection.findone.php) but it returns an object. As second parameter you can pass an array of fields. This means the parameters and queries stay the same, which is pretty great!
+```php   
+    //findOne with Mapper
+    $user = User::getMapper()->findOne( array( 'email' => 'user@mail.com' ) );
+```
 
-`find` also works like native [`find`](#http://www.php.net/manual/en/mongocollection.find.php) but it returns a `Mapper`. You can then perform other operations on it like `sort`, `limit`, `skip` which all work like native as well.
+There is a `find` method that gets more then one document. It also works like native [`find`](#http://www.php.net/manual/en/mongocollection.find.php) but it returns a `Mapper`. You can then perform other operations on it like `sort`, `limit`, `skip` which all work like native as well.
 To get result as array of objects use `get` method.
 
 ```php
+    //You can call it directly with Model
+    $messages = Message::find( array( 'to_id' => new MongoId( $stringId ), 'to_status' => Message::STATUS_UNREAD ) )
+        ->sort( array( 'created_at' => -1 ) )
+        ->limit( 10 )
+        ->get(); 
+
+    //or using Mapper itself
     $messages = Message::getMapper()
         ->find( array( 'to_id' => new MongoId( $stringId ), 'to_status' => Message::STATUS_UNREAD ) )
         ->sort( array( 'created_at' => -1 ) )
@@ -147,14 +178,7 @@ To get result as array of objects use `get` method.
 `save` method is used to create and update objects. That's the code to create new object and write it to the database
 
 ```php
-    // properties as array
     $user = new User( array( 'name' => 'John', 'email' => 'email@email.com' ) );
-    
-    // or each property separately
-    $user = new User;
-    $user->name = 'John';
-    $user->emial = 'email@email.com';
-    
     $user->save();
 ```
 You can get `_id` of newly created object just after `save`.
@@ -168,7 +192,7 @@ Deleting is simple
 Those methods return the same results as the native `remove` and `save` methods. If you want to update multiple documents use the native function like [here](#multiple-update).
 
 ### Extending Mapper
-You can extend `Mapper` if you want to add more methods. For example I created UserMapper with has a method that posts a message on an user's Facebook wall. Just let it know which model class to use.
+You can extend `Mapper` if you want to add more methods. For example I created UserMapper with has a method that posts a message on an user's Facebook wall. Just let `Mapper` know which `Model` class to use.
 
 ```php
 class UserMapper extends Mawelous\Yamop\Mapper
@@ -196,18 +220,22 @@ Now you just execute the `Mapper`
 
 ```php
     $mapper = User::getMapper();
+    //and then
+    $mapper->findActiveUsers( 5 );
 ```
 
 This will return an instance of UserMapper. You can also just create a new mapper
 
 ```php
     $userMapper = new UserMapper; 
+    //and then
+    $mapper->findActiveUsers( 5 );
 ```
 
 <a name="multiple-update"></a>
-### Count, Indexes, and multi update
+### Count, Indexes, multi update and others
 
-All methods called on `Mapper` that are not present are passed to the original [`MongoCollection`](#http://php.net/manual/en/class.mongocollection.php). So you can use `update`, `count`, and `ensureIndex` directly with the native methods.
+All methods called on `Mapper` that are not present are passed to the original [`MongoCollection`](#http://php.net/manual/en/class.mongocollection.php). So you can use `update`, `count`, `batchInsert`, `ensureIndex` and even `drop` directly with the native methods.
 
 ```php
     //count
@@ -219,6 +247,8 @@ All methods called on `Mapper` that are not present are passed to the original [
             array('$set' => array( 'status' => Contest::STATUS_ACTIVE) ),
             array('multiple' => true)
         );
+    //drop
+    Contest::getMapper()->drop();
 ```
 
 <a name="embedded"></a>
