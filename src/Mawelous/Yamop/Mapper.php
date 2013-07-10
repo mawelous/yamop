@@ -122,20 +122,8 @@ class Mapper
 	{
 		$modelClass = $this->_modelClassName;
 		$collectionName = $modelClass::getCollectionName();
-		
-		switch ( $this->_fetchType ) {
-			case self::FETCH_ARRAY:
-				return static::$_database->$collectionName->findOne( $query, $fields );
-			break;
-			
-			case self::FETCH_JSON:
-				return json_encode( static::$_database->$collectionName->findOne( $query, $fields ) );
-			break;
-			
-			default:
-				return $this->fetchObject( static::$_database->$collectionName->findOne( $query, $fields ) );
-			break;
-		}		
+		$result = static::$_database->$collectionName->findOne( $query, $fields );
+		return $this->_fetchOne( $result );
 	}
 
 	/**
@@ -150,6 +138,23 @@ class Mapper
 			$id = new \MongoId( $id );
 		}
 		return $this->findOne( array( '_id' => $id ) );
+	}
+	
+	/**
+	 * Updates an object and returns it
+	 * 
+	 * @param array $query
+	 * @param array $update
+	 * @param array $fields
+	 * @param array $options
+	 * @return array|string|Model
+	 */
+	public function findAndModify( $query, $update = array(), $fields = array(), $options = array() )
+	{
+		$modelClass = $this->_modelClassName;
+		$collectionName = $modelClass::getCollectionName();		
+		$result = static::$_database->$collectionName->findAndModify( $query, $update, $fields, $options );
+		return $this->_fetchOne( $result );
 	}
 
 	/**
@@ -325,6 +330,29 @@ class Mapper
 	public static function setDatabase( \MongoDB $database )
 	{
 		static::$_database = $database;
+	}
+	
+	/**
+	 * Converts document to proper type
+	 * 
+	 * @param array $array Document
+	 * @return array|string|Model
+	 */
+	protected function _fetchOne( $array )
+	{
+		switch ( $this->_fetchType ) {
+			case self::FETCH_ARRAY:
+				return $array;
+				break;
+					
+			case self::FETCH_JSON:
+				return json_encode( $array );
+				break;
+					
+			default:
+				return $this->fetchObject( $array );
+				break;
+		}		
 	}
 	
 	/**
