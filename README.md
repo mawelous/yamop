@@ -1,6 +1,8 @@
 # Yamop
 ### Yet another MongoDB ODM for PHP
 
+Documentation for version 0.1.0
+
 - [What's that?](#whatsthat)
 - [Requirements](#requirements)
 - [Installation](#installation)
