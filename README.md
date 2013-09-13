@@ -344,12 +344,12 @@ Default fetching mode converts arrays to objects but you can also get array or J
         ->get();        
 ```
 
-You can also get native `MongoCursor` calling `getCursor` method.
+You can also get the native `MongoCursor` by calling the `getCursor` method.
 
 <a name="pagination"></a>
 ### Pagination
 
-Yamop supports pagination with a little help from you. It has a `getPaginator` method which has three parameters. First is the amount of items per page, second is the current page number and third options you may want to pass to your paginator. All are optional.
+Yamop supports pagination with a little help from you. It has a `getPaginator` method which has three parameters. First is the amount of items per page, second is the current page number, and the third is a variable which you can pass to your paginator. All three are optional.
 
 ```php
     User::getMapper()
