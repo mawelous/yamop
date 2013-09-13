@@ -266,6 +266,16 @@ class MapperTest extends BaseTest
 	
 	}	
 	
+	public function testFindAndGetCursor()
+	{
+		$data = $this->_saveListData();
+		$mapper = new Mapper( '\Model\Simple', Mapper::FETCH_JSON );
+		$result = $mapper->find()->getCursor();	
+
+		$this->assertInstanceOf( '\MongoCursor', $result );
+		$this->assertEquals( count( $data ), $result->count() );
+	}
+	
 	/**
 	 * @expectedException Exception
 	 */
@@ -347,6 +357,22 @@ class MapperTest extends BaseTest
 	
 		$this->assertAttributeNotEmpty( 'author', $article );
 		$this->assertAttributeInstanceOf( '\Model\Author', 'author', $article );
+	
+	}	
+	
+	public function testJoinToNull()
+	{
+		$this->_saveArticleWithAuthor();
+		self::$_dbConnection->articles->insert( array ( 'title' => 'test', 'author' => null ) );
+	
+		$articles = \Model\Article::getMapper()->find()->join( 'author', '\Model\Author' )->get();
+		$article = array_shift( $articles );
+	
+		$this->assertAttributeNotEmpty( 'author', $article );
+		$this->assertAttributeInstanceOf( '\Model\Author', 'author', $article );
+		
+		$article = array_shift( $articles );
+		$this->assertAttributeSame( null, 'author', $article );	
 	
 	}	
 	

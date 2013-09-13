@@ -228,16 +228,17 @@ class Mapper
 	 * Performs proper skip and limit to get
 	 * data package that can be wraped in paginator
 	 * 
-	 * @param int $page
 	 * @param int $perPage
+	 * @param int $page 
+	 * @param mixed $options Options you want to pass
 	 */
-	public function getPaginator( $page = 1, $perPage = 10 )
+	public function getPaginator( $perPage = 10, $page = 1, $options = null)
 	{
 		$this->_checkCursor();
 		$total = $this->_cursor->count();
 		$this->_cursor->skip( ( $page -1 ) * $perPage )->limit( $perPage );
 		$result = $this->get();
-		return $this->_createPaginator($result, $total, $perPage);
+		return $this->_createPaginator($result, $total, $perPage, $page, $options);
 	}
 
 
@@ -362,9 +363,11 @@ class Mapper
 	 * @param mixed $results
 	 * @param int $totalCount
 	 * @param int $perPage
+	 * @param int $page
+	 * @param mixed $options
 	 * @throws \Exception
 	 */
-	protected function _createPaginator( $results, $totalCount, $perPage )
+	protected function _createPaginator( $results, $totalCount, $perPage, $page, $options )
 	{
 		throw new \Exception('If you want to get paginator '.
 			'please extend mapper class implementing _createPaginator function. '.
@@ -405,26 +408,32 @@ class Mapper
 			$ids = array();
 			if( !empty ( $array ) && is_object( current ( $array ) )){
 				foreach ( $array as $item ){
-					if( !isset( $item->$variable ) || !($item->$variable instanceof \MongoId) ){
-						throw new \Exception( 'Some item doesn\'t have a variable you\'re searching for or this variable is not a MongoId instance' );
+					if( isset( $item->$variable ) && ( $item->$variable instanceof \MongoId ) ){
+						$ids[] = $item->$variable;
 					}
-					$ids[] = $item->$variable;
 				}
-				$joined = $class::getMapper()->find( array ( '_id' => array ('$in' => $ids) ) )->get();
-				foreach ( $array as $item ){
-					$item->$toVariable = $joined[ (string) $item->$variable ];
+				if( count( $ids ) ){
+					$joined = $class::getMapper()->find( array ( '_id' => array ('$in' => $ids) ) )->get();
+					foreach ( $array as $item ){
+						if( isset( $item->$variable ) && ( $item->$variable instanceof \MongoId ) ){
+							$item->$toVariable = $joined[ (string) $item->$variable ];
+						}
+					}
 				}
 			} elseif ( !empty ( $array ) ){
 				foreach ( $array as $item ){
-					if( !isset( $item[ $variable ] ) || !($item[ $variable ] instanceof \MongoId) ){
-						throw new \Exception( 'Some item doesn\'t have a variable you\'re searching for or this variable is not a MongoId instance' );
+					if( isset( $item[ $variable ] ) && ( $item[ $variable ] instanceof \MongoId ) ){
+						$ids[] = $item[ $variable ];
 					}
-					$ids[] = $item[ $variable ];
 				}
-				$joined = $class::getMapper()->find( array ( '_id' => array ('$in' => $ids) ) )->getArray();				
-				foreach ( $array as &$item ){
-					$item[$toVariable] = $joined[ (string) $item[ $variable ] ];
-				}	
+				if( count( $ids ) ){
+					$joined = $class::getMapper()->find( array ( '_id' => array ('$in' => $ids) ) )->getArray();				
+					foreach ( $array as &$item ){
+						if( isset( $item[ $variable ] ) && ( $item[ $variable ] instanceof \MongoId ) ){
+							$item[$toVariable] = $joined[ (string) $item[ $variable ] ];
+						}
+					}	
+				}
 			}
 		}	
 		return $array;

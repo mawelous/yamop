@@ -1,8 +1,6 @@
 # Yamop
 ### Yet another MongoDB ODM for PHP
 
-Documentation for version 0.1.0
-
 - [What's that?](#whatsthat)
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -346,28 +344,30 @@ Default fetching mode converts arrays to objects but you can also get array or J
         ->get();        
 ```
 
+You can also get native `MongoCursor` calling `getCursor` method.
+
 <a name="pagination"></a>
 ### Pagination
 
-Yamop supports pagination with a little help from you. It has a `getPaginator` method which takes two parameters. First is the current page number, second is the amount of items per page.
+Yamop supports pagination with a little help from you. It has a `getPaginator` method which has three parameters. First is the amount of items per page, second is the current page number and third options you may want to pass to your paginator. All are optional.
 
 ```php
     User::getMapper()
         ->find( 'status' => array ( '$ne' => User::STATUS_DELETED )) )
         ->sort( array( $field => $direction ) )
-        ->getPaginator( $page, $perPage );
+        ->getPaginator( $perPage, $page, $options );
 ```
 
 Your framework probably has its own paginator. Before you use the `getPaginator` method you have to implement the `_createPaginator` method in a mapper that extends `Mawelous\Yamop\Mapper`.
 
-[Laravel 3](http://laravel.com) would be extended like this:
+[Laravel](http://laravel.com) would be extended like this:
 
 ```php
 <?php
 
 class Mapper extends \Mawelous\Yamop\Mapper
 {
-    protected function _createPaginator($results, $totalCount, $perPage)
+    protected function _createPaginator($results, $totalCount, $perPage, $page, $options)
     {
         return \Paginator::make( $results, $totalCount, $perPage ); 
     }
