@@ -16,6 +16,13 @@ class Model
 	protected static $_collectionName = '';
 	
 	/**
+	 * Database connection name set in mapper
+	 *
+	 * @var string
+	 */
+	protected static $_connectionName = null;	
+	
+	/**
 	 * Specifies if created_at and updated_at fields
 	 * should be added and serve automatically 
 	 * @var bool
@@ -140,6 +147,17 @@ class Model
 		}
 		return static::$_collectionName;		
 	}
+	
+	/**
+	 * Gets database connection name for model
+	 * It should be specified in $_databaseConnection
+	 *
+	 * @return string
+	 */
+	public static function getConnectionName()
+	{
+		return static::$_connectionName;
+	}	
 
 	/**
 	 * Saves object to database.

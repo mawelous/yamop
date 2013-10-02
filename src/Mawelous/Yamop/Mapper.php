@@ -70,7 +70,7 @@ class Mapper
 			throw new \Exception( 'Mapper needs to know model class.' );
 		}
 		
-		if ( !static::$_database instanceof \MongoDB ) {
+		if ( empty(static::$_database) ) {
 				throw new \Exception( 'Give me some database. You can pass it with setDatabase function.' );
 		}
 		
@@ -86,10 +86,8 @@ class Mapper
 	 */
 	public function __call( $functionName, $functionArguments )
 	{
-		$modelClass = $this->_modelClassName;
-		$collectionName = $modelClass::getCollectionName();
 		return call_user_func_array(
-			array( static::$_database->$collectionName, $functionName ),
+			array( $this->_getModelCollection(), $functionName ),
 			$functionArguments
 		);
 	}
@@ -104,14 +102,12 @@ class Mapper
 	 */
 	public function find( $query = array(), $fields = array() )
 	{
-		$modelClass = $this->_modelClassName;
-		$collectionName = $modelClass::getCollectionName();
-		$this->_cursor = static::$_database->$collectionName->find( $query, $fields );
+		$this->_cursor = $this->_getModelCollection()->find( $query, $fields );
 		return $this;
 	}
 
 	/**
-	 * Acts like MongoColletsion function but returns
+	 * Acts like MongoCollection function but returns
 	 * result of expected type
 	 * 
 	 * @param array $query
@@ -120,9 +116,7 @@ class Mapper
 	 */
 	public function findOne( $query = array(), $fields = array() )
 	{
-		$modelClass = $this->_modelClassName;
-		$collectionName = $modelClass::getCollectionName();
-		$result = static::$_database->$collectionName->findOne( $query, $fields );
+		$result = $this->_getModelCollection()->findOne( $query, $fields );
 		return $this->_fetchOne( $result );
 	}
 
@@ -151,9 +145,7 @@ class Mapper
 	 */
 	public function findAndModify( $query, $update = array(), $fields = array(), $options = array() )
 	{
-		$modelClass = $this->_modelClassName;
-		$collectionName = $modelClass::getCollectionName();		
-		$result = static::$_database->$collectionName->findAndModify( $query, $update, $fields, $options );
+		$result = $this->_getModelCollection()->findAndModify( $query, $update, $fields, $options );
 		return $this->_fetchOne( $result );
 	}
 
@@ -325,12 +317,34 @@ class Mapper
 	/**
 	 * Sets database. That needs to be performed before you can get any data. 
 	 * 
-	 * @param MongoDB $database
+	 * @param MongoDB|array $database
 	 * @return void
 	 */
-	public static function setDatabase( \MongoDB $database )
+	public static function setDatabase( $database )
 	{
-		static::$_database = $database;
+		if( $database instanceof \MongoDb ){
+			static::$_database = array( 'defalut' => $database );
+		} elseif( is_array( $database ) ){
+			static::$_database = $database;
+		} else {
+			throw new \Exception('Database must be an array fo MongoDb objects or MongoDb object');
+		}
+	}
+	
+	/**
+	 * Get connection to collection for mapper's model 
+	 */
+	protected function _getModelCollection()
+	{
+		$modelClass = $this->_modelClassName;
+		$collectionName = $modelClass::getCollectionName();
+		$connectionName = $modelClass::getConnectionName();
+		if( !empty( $connectionName ) ){
+			$database = self::$_database[ $connectionName ]; 
+		} else {
+			$database = reset( self::$_database );
+		}
+		return $database->$collectionName;		
 	}
 	
 	/**
