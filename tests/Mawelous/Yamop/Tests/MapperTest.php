@@ -237,16 +237,13 @@ class MapperTest extends BaseTest
 	
 		$this->assertInternalType( 'string', $result );
 		
-		$result = json_decode( $result, true );
-		
-		$keys = array_keys( $result );
-	
-		$this->assertEquals( (string)$data[0]['_id'], $keys[0] );
+		$result = json_decode( $result );	
 		$current = current( $result );
 		
-		$this->assertInternalType( 'array', $current );
-		$this->assertEquals( (string)$data[0]['_id'], $current['_id']['$id'] );
-		$this->assertCount( count( $data ), $result );
+		$this->assertInternalType( 'array', $result );
+		$this->assertInstanceOf( 'stdClass', $current );
+		$this->assertAttributeNotEmpty( '_id', $current );
+		$this->assertCount( count( $data ), $result );		
 	
 		$mapper = new Mapper( '\Model\Simple' );
 		$mapper->setFetchType( Mapper::FETCH_JSON );
@@ -254,15 +251,13 @@ class MapperTest extends BaseTest
 	
 		$this->assertInternalType( 'string', $result );
 		
-		$result = json_decode( $result, true );
-	
-		$keys = array_keys( $result );
-	
-		$this->assertEquals( (string)$data[0]['_id'], $keys[0] );
+		$result = json_decode( $result );
 		$current = current( $result );
-		$this->assertInternalType( 'array', $current );
-		$this->assertEquals( (string)$data[0]['_id'], (string) $current['_id']['$id'] );
-		$this->assertCount( count( $data ), $result );
+		
+		$this->assertInternalType( 'array', $result );
+		$this->assertInstanceOf( 'stdClass', $current );
+		$this->assertAttributeNotEmpty( '_id', $current );
+		$this->assertCount( count( $data ), $result );	
 	
 	}	
 	

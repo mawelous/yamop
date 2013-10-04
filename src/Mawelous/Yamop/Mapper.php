@@ -251,7 +251,7 @@ class Mapper
 			
 			case self::FETCH_JSON:
 				$this->_checkCursor();
-				return json_encode($this->_performJoins( iterator_to_array( $this->_cursor ) ));	
+				return json_encode($this->_performJoins( iterator_to_array( $this->_cursor, false ) ));	
 			break;			
 			
 			default:
