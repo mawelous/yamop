@@ -122,7 +122,6 @@ Want to get a document by its id? There is a simple way.
 
 <a name="stringid"></a>
 ```php
-    $stringId = ;
     $user = User::findById( '51a61930b7846c400f000002' )
     //or
     $mongoId = new MongoId( '51a61930b7846c400f000002' );

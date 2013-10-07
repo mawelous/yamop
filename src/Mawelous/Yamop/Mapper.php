@@ -16,9 +16,10 @@ class Mapper
 	 * 
 	 * @var int
 	 */
-	const FETCH_OBJECT = 1;
-	const FETCH_ARRAY  = 2;
-	const FETCH_JSON   = 3;
+	const FETCH_OBJECT        = 1;
+	const FETCH_ARRAY         = 2;
+	const FETCH_JSON          = 3;
+	const FETCH_NUMERIC_ARRAY = 4;
 	
 	/**
 	 * Mongo connection to database
@@ -244,10 +245,16 @@ class Mapper
 		$this->_checkCursor();
 		
 		switch ( $this->_fetchType ) {
+			
 			case self::FETCH_ARRAY:
 				$this->_checkCursor();
 				return $this->_performJoins( iterator_to_array( $this->_cursor ) );
 			break;
+			
+			case self::FETCH_NUMERIC_ARRAY:
+				$this->_checkCursor();
+				return $this->_performJoins( iterator_to_array( $this->_cursor, false ) );
+				break;			
 			
 			case self::FETCH_JSON:
 				$this->_checkCursor();
@@ -267,11 +274,12 @@ class Mapper
 	/**
 	 * Gets data as array
 	 * 
+	 * @para bool $idKeys Should keys contain MongoId of object as string
 	 * @return array
 	 */
-	public function getArray()
+	public function getArray( $idKeys = true )
 	{
-		$this->_fetchType = self::FETCH_ARRAY;
+		$this->_fetchType = $idKeys ? self::FETCH_ARRAY : self::FETCH_NUMERIC_ARRAY;
 		return $this->get();
 	}
 	
@@ -305,7 +313,12 @@ class Mapper
 	 */
 	public function setFetchType( $fetchType )
 	{
-		if( !in_array( $fetchType, array( self::FETCH_OBJECT, self::FETCH_JSON, self::FETCH_ARRAY ) ) ){
+		if( !in_array( $fetchType, 
+			           array( self::FETCH_OBJECT,
+			           		  self::FETCH_JSON,
+			           		  self::FETCH_ARRAY,
+							  self::FETCH_NUMERIC_ARRAY ) )
+		){
 			throw new \Exception( 'Please use of of provided methotd for fetch' );
 		}
 		

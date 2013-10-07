@@ -228,6 +228,72 @@ class MapperTest extends BaseTest
 		$this->assertCount( count( $data ), $result );
 		
 	}
+	
+	public function testFindandGetArray()
+	{
+		$data = $this->_saveListData();
+		$mapper = new Mapper( '\Model\Simple' );
+		$result = $mapper->find()->getArray();
+		
+		$this->assertInternalType( 'array', $result );
+		
+		$keys = array_keys( $result );
+		
+		$this->assertEquals( (string)$data[0]['_id'], $keys[0] );
+		$current = current( $result );
+		$this->assertInternalType( 'array', $current );
+		$this->assertEquals( (string)$data[0]['_id'], (string) $current['_id'] );
+		$this->assertCount( count( $data ), $result );		
+	}
+	
+	public function testFindAndGetWithFetchNumericArraySet()
+	{
+		$data = $this->_saveListData();
+		$mapper = new Mapper( '\Model\Simple', Mapper::FETCH_NUMERIC_ARRAY );
+		$result = $mapper->find()->get();
+	
+		$this->assertInternalType( 'array', $result );
+	
+		$keys = array_keys( $result );
+	
+		$this->assertSame( 0, $keys[0] );
+		$current = current( $result );
+		$this->assertInternalType( 'array', $current );
+		$this->assertEquals( (string)$data[0]['_id'], (string) $current['_id'] );
+		$this->assertCount( count( $data ), $result );
+	
+		$mapper = new Mapper( '\Model\Simple' );
+		$mapper->setFetchType( Mapper::FETCH_NUMERIC_ARRAY );
+		$result = $mapper->find()->get();
+	
+		$this->assertInternalType( 'array', $result );
+	
+		$keys = array_keys( $result );
+	
+		$this->assertSame( 0, $keys[0] );
+		$current = current( $result );
+		$this->assertInternalType( 'array', $current );
+		$this->assertEquals( (string)$data[0]['_id'], (string) $current['_id'] );
+		$this->assertCount( count( $data ), $result );
+	
+	}	
+	
+	public function testFindandGetNumericArray()
+	{
+		$data = $this->_saveListData();
+		$mapper = new Mapper( '\Model\Simple' );
+		$result = $mapper->find()->getArray(false);
+	
+		$this->assertInternalType( 'array', $result );
+	
+		$keys = array_keys( $result );
+	
+		$this->assertSame( 0, $keys[0] );
+		$current = current( $result );
+		$this->assertInternalType( 'array', $current );
+		$this->assertEquals( (string)$data[0]['_id'], (string) $current['_id'] );
+		$this->assertCount( count( $data ), $result );
+	}	
 		
 	public function testFindAndGetWithFetchJsonSet()
 	{
@@ -260,6 +326,23 @@ class MapperTest extends BaseTest
 		$this->assertCount( count( $data ), $result );	
 	
 	}	
+	
+	public function testFindAndGetJson()
+	{
+		$data = $this->_saveListData();
+		$mapper = new Mapper( '\Model\Simple' );
+		$result = $mapper->find()->getJson();
+		
+		$this->assertInternalType( 'string', $result );
+		
+		$result = json_decode( $result );
+		$current = current( $result );
+		
+		$this->assertInternalType( 'array', $result );
+		$this->assertInstanceOf( 'stdClass', $current );
+		$this->assertAttributeNotEmpty( '_id', $current );
+		$this->assertCount( count( $data ), $result );		
+	}
 	
 	public function testFindAndGetCursor()
 	{

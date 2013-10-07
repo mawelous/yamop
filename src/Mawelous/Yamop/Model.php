@@ -239,7 +239,7 @@ class Model
 	 * Refferer to Mapper's find.
 	 * Gets Mapper object with cursor set.
 	 *
-	 * @param array $query Query as for findOne in mongodb driver
+	 * @param array $query Query as for find in mongodb driver
 	 * @param array $fields
 	 * @return Model
 	 */
