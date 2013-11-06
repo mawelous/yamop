@@ -359,7 +359,7 @@ class MapperTest extends BaseTest
 	 */
 	public function testSortWithoutFind()
 	{
-		( new Mapper( 'Model\Simple' ) )->sort();
+		( new Mapper( 'Model\Simple' ) )->sort( array( 'letter' => 1 ) );
 	}
 	
 	/**
@@ -451,6 +451,35 @@ class MapperTest extends BaseTest
 		
 		$article = array_shift( $articles );
 		$this->assertAttributeSame( null, 'author', $article );	
+	
+	}	
+	
+	public function testCallNativeBatchInsert()
+	{
+		$data = $this->_getListData();
+		$mapper = new Mapper( '\Model\Simple' );		
+		$mapper->batchInsert( $data, array( 'continueOnError' => true, 'timeout' => 10000 ) );
+				
+		$dbData = self::$_dbConnection->simple->find();
+		
+		$this->assertInstanceOf( 'MongoCursor', $dbData );
+		$this->assertCount( count( $data ), $dbData );
+		$dbDataArray = iterator_to_array($dbData,false);
+		$this->assertEquals( (string)$data[0]['_id'], (string) $dbDataArray[0]['_id'] );
+		$this->assertEquals( $data[1]['letter'], $dbDataArray[1]['letter'] );
+						
+	}
+	
+	public function testCallNativeInsertWithoutW()
+	{
+		$mapper = new Mapper( '\Model\Simple' );
+		$result = $mapper->insert( $this->_getSimpleData(), array( 'w' => 0) );
+		$this->assertTrue($result);
+	
+		$dbData = self::$_dbConnection->simple->find();
+	
+		$this->assertInstanceOf( 'MongoCursor', $dbData );
+		$this->assertCount( 1, $dbData );
 	
 	}	
 	
