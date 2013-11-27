@@ -14,7 +14,9 @@
     - [timestamps](#timestamps)
     - [dates and time](#datetime)
     - [transactions](#transactions)
-- [Issues](#Issues)
+    - [advanced](#advanced)
+        - [multiple connections](#multiple_connections)
+- [Issues](#issues)
 - [License](#license)
 
 <a name="whatsthat"></a>
@@ -193,7 +195,7 @@ Deleting is simple
 Those methods return the same results as the native `remove` and `save` methods. If you want to update multiple documents use the native function like [here](#multiple-update).
 
 ### Extending Mapper
-You can extend `Mapper` if you want to add more methods. For example I created UserMapper wich has a method that posts a message on an user's Facebook wall. Just let `Mapper` know which `Model` class to use.
+You can extend `Mapper` if you want to add more methods. For example I created UserMapper which has a method that posts a message on an user's Facebook wall. Just let `Mapper` know which `Model` class to use.
 
 ```php
 class UserMapper extends Mawelous\Yamop\Mapper
@@ -320,6 +322,7 @@ If you want to join items to a list of items use `join` in a `Mapper`. Three par
 ### Output format
 
 Default fetching mode converts arrays to objects but you can also get array or JSON with `getArray` and `getJson`.
+As default `getArray` returns array with keys holding `MongoId` as string. If you want to receive numeric array call it with false param `getArray(false)`
 
 ```php
     //first possibility
@@ -332,9 +335,10 @@ Default fetching mode converts arrays to objects but you can also get array or J
         ->getJson();
     
     /* second possibility
-        three fetch types as constants in Mapper
+        four fetch types as constants in Mapper
         FETCH_OBJECT
-        FETCH_ARRAY 
+        FETCH_ARRAY
+        FETCH_NUMERIC_ARRAY
         FETCH_JSON  
     */
     Comment::getMapper( \Mawelous\Yamop\Mapper::FETCH_JSON )
@@ -444,6 +448,23 @@ Here an example:
     });
 ```
 Now when error happens `rollback` will invoke all added methods.
+
+<a name="advanced"></a>
+### Advanced
+
+<a name="multiple_connections"></a>
+#### Multiple connections
+It's simple to have different connections for models. `setDatabase` can take `MongoDb` or array of `MongoDbs` as param. Keys in array are connection names.
+```php
+    $db1 = ( new \MongoClient( 'your_first_host' ) )->first_db;
+    $db2 = ( new \MongoClient( 'your_second_host' ) )->second_db;
+    \Mawelous\Yamop\Mapper::setDatabase( array( 'default' => $db1, 'special' => $db2 ) );
+```
+This is how you specify connection name in model.
+```php
+    protected static $_connectionName = 'special';
+```
+If it's not specified model will use first connection.
 
 <a name="issues"></a>
 ## Issues
