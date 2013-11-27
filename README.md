@@ -58,7 +58,7 @@ After Composer is done you only need to add the following lines to your code
 
 ```php
     $connection = new \MongoClient( 'your_host' );
-    \Mawelous\Yamop\Mapper::setDatabase( $connection->db_name );
+    \Mawelous\Yamop\Mapper::setDatabase( $connection->your_db_name );
 ```
 
 You can pass any `MongoDB` instance to the `setDatabase` function.
@@ -258,24 +258,27 @@ All methods called on `Mapper` that are not present are passed to the original [
 Do you have more objects within the current object? Yamop will convert it automatically. Just let it know.
 
 ```php
-class User extends Model
+class User extends \Mawelous\Yamop\Model
 {
     protected static $_collectionName = 'users';
-    protected static $_mapperClassName = 'UserMapper';  
+
     // One Address object embedded in address property
     protected static $_embeddedObject = array (
-            'address' => 'Address',
+        'address' => 'Address',
     );
     // Many Notification objects embedded in array that is kept ass notifications
     protected static $_embeddedObjectList = array (
         'notifications' => 'Notification',
     );
+}     
 ```
+Then it will convert object embedded in `address` field to `Address` PHP object and `notifications` array of objects to array of `Notification` PHP objects. All embedded objects can be pure models - they can only extend `\Mawelous\Yamop\Model`.
+
 
 <a name="related"></a>
 ### Related objects
 
-If there are relations between objects (there are sometimes) and you would like to "join" them, it's simpler than you would expect, even with `MongoDB`.
+If there are relations between objects (there are sometimes) and you would like to "join" them, it's simpler than you would expect, even with `MongoDB`. All you need is to keep the `MongoId` of the related object within your base object.
 
 You don't have to register it anywhere. In my opinion it's better to do this explicit and avoid queries in background. 
 
@@ -283,9 +286,10 @@ Here's the magic:
 
 #### One
 
-The `joinOne` method in every `Model` takes three parameters. First is the name of the property which keeps the `MongoId` of the related object, second is the related objects class, and third is the property name it will be joined at.
+The `joinOne` method in every `Model` takes three parameters. First is the name of the property which keeps the `MongoId` of the related object, second is the related objects class, and third, optional, is the property name it will be joined at.
 
 ```php
+    // contest_id property holds MongoId of related Contest object
     $user = User::findById( new MongoId( $stringId ) )->joinOne( 'contest_id', 'Contest', 'contest')
     // and there it is
     $contest = $user->contest;
@@ -293,9 +297,10 @@ The `joinOne` method in every `Model` takes three parameters. First is the name 
 
 #### Many
 
-The `joinMany` method in every `Model` has also three parameters. First is the name of the property which keeps an array of `MongoId`'s, second is the related objects class, and third is the property name it will be joined at.
+The `joinMany` method in every `Model` has also three parameters. First is the name of the property which keeps an array of `MongoId`, second is the related objects class, and third, optional, is the property name it will be joined at.
 
 ```php
+    // contests field is array of MongoIds
     $user = User::findById( new MongoId( $stringId ) )->joinMany( 'contests', 'Contest', 'contests')
     // and you have array of contests there
     $contests = $user->contests;
