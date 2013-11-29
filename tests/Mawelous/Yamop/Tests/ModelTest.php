@@ -233,6 +233,12 @@ class ModelTest extends BaseTest
 		$this->assertSame( date( 'Y-m-s H:i', $this->_timestamp ), $article->getDate( 'date', 'Y-m-s H:i' ) );
 	}	
 	
+	public function testReturnsNullIfPropertyDoesntExist()
+	{
+	    $o = new \Model\Note;
+	    $this->assertNull( $o->something );
+	}
+	
 	protected function _getArticle()
 	{
 		$article = new \Model\Article;

@@ -118,6 +118,8 @@ There are two possibilities to pass properties to object
     $user->emial = 'email@email.com';
 ```
 
+After version 0.2.1 (excluding it) Yamop returns `null` when you try to get a property that doesn't exist.
+
 <a name="getting"></a>
 ### Getting data
 Want to get a document by its id? There is a simple way.

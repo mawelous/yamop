@@ -92,6 +92,14 @@ class Model
 	}
 	
 	/**
+	 * Returns null if property doesn't exist
+	 */
+	public function __get( $property )
+	{
+	    return null;
+	}
+	
+	/**
 	 * Fills object with variables.
 	 * Sets embedded objects if they are registered in
 	 * $_embeddedObjectLisr or $_embeddedObject.
