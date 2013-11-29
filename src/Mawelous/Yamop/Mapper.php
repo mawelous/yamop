@@ -343,6 +343,16 @@ class Mapper
 			throw new \Exception('Database must be an array fo MongoDb objects or MongoDb object');
 		}
 	}
+
+	/**
+	 * Gets database connections 
+	 * 
+	 * @return \MongoDB
+	 */
+	public static function getDatabase()
+	{
+		return self::$_database;
+	}
 	
 	/**
 	 * Get connection to collection for mapper's model 
