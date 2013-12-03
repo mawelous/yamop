@@ -12,14 +12,43 @@ class Mapper
 {
 
 	/**
-	 * Represents type of fetching
+	 * Fetching as model and array of models
+	 * with keys containing string id
 	 * 
 	 * @var int
 	 */
-	const FETCH_OBJECT        = 1;
-	const FETCH_ARRAY         = 2;
-	const FETCH_JSON          = 3;
+	const FETCH_OBJECT = 1;
+	
+	/**
+	 * Fetching as array and array of array
+	 * with keys containing string id
+	 *
+	 * @var int
+	 */	
+	const FETCH_ARRAY = 2;
+	
+	/**
+	 * Fetching as JSON
+	 *
+	 * @var int
+	 */	
+	const FETCH_JSON = 3;
+	
+	/**
+	 * Fetching as array and array of array
+	 * with numeric keys
+	 *
+	 * @var int
+	 */	
 	const FETCH_NUMERIC_ARRAY = 4;
+	
+	/**
+	 * Fetching as model and array of models
+	 * with numeric keys
+	 *
+	 * @var int
+	 */
+	const FETCH_OBJECT_NO_KEYS = 5;	
 	
 	/**
 	 * Mongo connection to database
@@ -63,7 +92,7 @@ class Mapper
 	 * @param int $fetchType One of constants
 	 * @throws \Exception
 	 */
-	public function __construct( $modelClass = null, $fetchType = self::FETCH_OBJECT )
+	public function __construct( $modelClass = null, $fetchType = null)
 	{	
 		if( !empty( $modelClass ) ){
 			$this->_modelClassName = $modelClass;
@@ -75,7 +104,9 @@ class Mapper
 				throw new \Exception( 'Give me some database. You can pass it with setDatabase function.' );
 		}
 		
-		$this->setFetchType( $fetchType );
+		if ( !empty($fetchType) ) {
+			$this->setFetchType( $fetchType );
+		}
 	}
 
 	/**
@@ -261,6 +292,14 @@ class Mapper
 				return json_encode($this->_performJoins( iterator_to_array( $this->_cursor, false ) ));	
 			break;			
 			
+			case self::FETCH_OBJECT_NO_KEYS:
+				$result = array();
+				foreach ( $this->_cursor as $key => $item ) {
+					$result[] = $this->fetchObject( $item );
+				}
+				return $this->_performJoins($result);
+				break;
+			
 			default:
 				$result = array();
 				foreach ( $this->_cursor as $key => $item ) {
@@ -317,7 +356,8 @@ class Mapper
 			           array( self::FETCH_OBJECT,
 			           		  self::FETCH_JSON,
 			           		  self::FETCH_ARRAY,
-							  self::FETCH_NUMERIC_ARRAY ) )
+							  self::FETCH_NUMERIC_ARRAY,
+			           		  self::FETCH_OBJECT_NO_KEYS ) )
 		){
 			throw new \Exception( 'Please use of of provided methotd for fetch' );
 		}

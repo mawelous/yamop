@@ -195,7 +195,34 @@ class MapperTest extends BaseTest
 		$this->assertEquals( (string)$data[0]['_id'], $keys[0] );
 		$this->assertInstanceOf( '\Model\Simple', current( $result ) );
 		$this->assertCount( count( $data ), $result );		
-	}	
+	}
+	
+	public function testFindAndGetWithFetchObjectNoKeysSet()
+	{
+		$data = $this->_saveListData();
+		$mapper = new Mapper( '\Model\Simple', Mapper::FETCH_OBJECT_NO_KEYS );
+		$result = $mapper->find()->get();
+	
+		$this->assertInternalType( 'array', $result );
+	
+		$keys = array_keys( $result );
+	
+		$this->assertEquals( 0, $keys[0] );
+		$this->assertInstanceOf( '\Model\Simple', current( $result ) );
+		$this->assertCount( count( $data ), $result );
+	
+		$mapper = new Mapper( '\Model\Simple' );
+		$mapper->setFetchType( Mapper::FETCH_OBJECT_NO_KEYS );
+		$result = $mapper->find()->get();
+	
+		$this->assertInternalType( 'array', $result );
+	
+		$keys = array_keys( $result );
+	
+		$this->assertEquals( 0, $keys[0] );
+		$this->assertInstanceOf( '\Model\Simple', current( $result ) );
+		$this->assertCount( count( $data ), $result );	    
+	}
 	
 	public function testFindAndGetWithFetchArraySet()
 	{
