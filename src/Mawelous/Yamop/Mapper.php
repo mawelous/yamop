@@ -239,11 +239,12 @@ class Mapper
 	 * @param string $toVariable Name od variable to which it should be writen
 	 * @return Mapper
 	 */
-	public function join( $variable, $class, $toVariable = null )
+	public function join( $variable, $class, $toVariable = null, $fields = array() )
 	{	
 		$this->_joins[] = array ( 'variable' => $variable,
 								  'class' => $class,
-								  'to_variable' => $toVariable
+								  'to_variable' => $toVariable,
+								  'fields' => $fields
 			);
 		return $this;
 	}
@@ -481,6 +482,7 @@ class Mapper
 			$toVariable = !empty( $join['to_variable'] ) ? $join['to_variable'] : $join['variable'];
 			$variable = $join['variable'];
 			$class = $join['class'];
+			$fields = $join['fields'];
 
 			$ids = array();
 			if( !empty ( $array ) && is_object( current ( $array ) )){
@@ -490,7 +492,7 @@ class Mapper
 					}
 				}
 				if( count( $ids ) ){
-					$joined = $class::getMapper()->find( array ( '_id' => array ('$in' => $ids) ) )->get();
+					$joined = $class::getMapper()->find( array ( '_id' => array ('$in' => $ids) ), $fields )->get();
 					foreach ( $array as $item ){
 						if( isset( $item->$variable ) && ( $item->$variable instanceof \MongoId ) ){
 							$item->$toVariable = $joined[ (string) $item->$variable ];
@@ -504,7 +506,7 @@ class Mapper
 					}
 				}
 				if( count( $ids ) ){
-					$joined = $class::getMapper()->find( array ( '_id' => array ('$in' => $ids) ) )->getArray();				
+					$joined = $class::getMapper()->find( array ( '_id' => array ('$in' => $ids) ), $fields )->getArray();				
 					foreach ( $array as &$item ){
 						if( isset( $item[ $variable ] ) && ( $item[ $variable ] instanceof \MongoId ) ){
 							$item[$toVariable] = $joined[ (string) $item[ $variable ] ];

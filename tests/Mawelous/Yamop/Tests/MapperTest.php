@@ -450,7 +450,9 @@ class MapperTest extends BaseTest
 		
 		$this->assertAttributeNotEmpty( 'authorObject', $article );
 		$this->assertAttributeInstanceOf( '\Model\Author', 'authorObject', $article );
-		
+		$authorData = $this->_getAuthorData();
+		$this->assertEquals( $authorData['name'], $article->authorObject->name );
+		$this->assertEquals( $authorData['email'], $article->authorObject->email );
 	}
 	
 	public function testJoinWithoutVariable()
@@ -462,8 +464,24 @@ class MapperTest extends BaseTest
 	
 		$this->assertAttributeNotEmpty( 'author', $article );
 		$this->assertAttributeInstanceOf( '\Model\Author', 'author', $article );
-	
+		$authorData = $this->_getAuthorData();
+		$this->assertEquals( $authorData['name'], $article->author->name );
+		$this->assertEquals( $authorData['email'], $article->author->email );
 	}	
+	
+	public function testJoinWithFields()
+	{
+		$this->_saveArticleWithAuthor();
+		
+		$articles = \Model\Article::getMapper()->find()->join( 'author', '\Model\Author', 'author', array( 'name' ) )->get();
+		$article = array_shift( $articles );
+		
+		$this->assertAttributeNotEmpty( 'author', $article );
+		$this->assertAttributeInstanceOf( '\Model\Author', 'author', $article );
+		$authorData = $this->_getAuthorData();
+		$this->assertEquals( $authorData['name'], $article->author->name );
+		$this->assertObjectNotHasAttribute('email',$article->author);
+	}
 	
 	public function testJoinToNull()
 	{
@@ -524,6 +542,11 @@ class MapperTest extends BaseTest
 				);
 	}
 	
+	protected function _getAuthorData()
+	{
+		return array( 'name' => 'test', 'email' => 'author@example.com' );
+	}
+	
 	protected function _saveSimpleData()
 	{
 		self::$_dbConnection->simple->insert( $this->_getSimpleData() );
@@ -538,7 +561,7 @@ class MapperTest extends BaseTest
 	
 	protected function _saveArticleWithAuthor()
 	{
-		$author = array( 'name' => 'test' );
+		$author = $this->_getAuthorData();
 		self::$_dbConnection->authors->save( $author );
 		self::$_dbConnection->articles->insert( array ( 'title' => 'test', 'author' => $author['_id'] ) );
 	}
