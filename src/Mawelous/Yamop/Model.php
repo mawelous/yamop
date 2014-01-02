@@ -136,7 +136,7 @@ class Model
 	 * @param int $fetchType Fetch type as specified in Mapper constants
 	 * @return Mapper
 	 */
-	public static function getMapper( $fetchType = Mapper::FETCH_OBJECT )
+	public static function getMapper( $fetchType = null )
 	{
 		return new static::$_mapperClassName( get_called_class(), $fetchType );
 	}
