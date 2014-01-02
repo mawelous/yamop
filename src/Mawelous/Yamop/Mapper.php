@@ -492,7 +492,7 @@ class Mapper
 					}
 				}
 				if( count( $ids ) ){
-					$joined = $class::getMapper()->find( array ( '_id' => array ('$in' => $ids) ), $fields )->get();
+					$joined = $class::getMapper( Mapper::FETCH_OBJECT )->find( array ( '_id' => array ('$in' => $ids) ), $fields )->get();
 					foreach ( $array as $item ){
 						if( isset( $item->$variable ) && ( $item->$variable instanceof \MongoId ) ){
 							$item->$toVariable = $joined[ (string) $item->$variable ];
@@ -506,7 +506,7 @@ class Mapper
 					}
 				}
 				if( count( $ids ) ){
-					$joined = $class::getMapper()->find( array ( '_id' => array ('$in' => $ids) ), $fields )->getArray();				
+					$joined = $class::getMapper()->find( array ( '_id' => array ('$in' => $ids) ), $fields )->getArray();
 					foreach ( $array as &$item ){
 						if( isset( $item[ $variable ] ) && ( $item[ $variable ] instanceof \MongoId ) ){
 							$item[$toVariable] = $joined[ (string) $item[ $variable ] ];
