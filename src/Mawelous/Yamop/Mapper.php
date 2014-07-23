@@ -377,7 +377,7 @@ class Mapper
 	public static function setDatabase( $database )
 	{
 		if( $database instanceof \MongoDb ){
-			static::$_database = array( 'defalut' => $database );
+			static::$_database = array( 'default' => $database );
 		} elseif( is_array( $database ) ){
 			static::$_database = $database;
 		} else {
