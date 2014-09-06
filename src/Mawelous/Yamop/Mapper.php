@@ -371,13 +371,14 @@ class Mapper
 	/**
 	 * Sets database. That needs to be performed before you can get any data. 
 	 * 
-	 * @param MongoDB|array $database
+	 * @param \MongoDB|array $database
 	 * @return void
+	 * @throws \Exception
 	 */
 	public static function setDatabase( $database )
 	{
 		if( $database instanceof \MongoDb ){
-			static::$_database = array( 'defalut' => $database );
+			static::$_database = array( 'default' => $database );
 		} elseif( is_array( $database ) ){
 			static::$_database = $database;
 		} else {
