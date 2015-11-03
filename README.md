@@ -115,7 +115,7 @@ There are two possibilities to pass properties to object
     // or each property separately
     $user = new User;
     $user->name = 'John';
-    $user->emial = 'email@email.com';
+    $user->email = 'email@email.com';
 ```
 
 After version 0.2.1 (excluding it) Yamop returns `null` when you try to get a property that doesn't exist.
